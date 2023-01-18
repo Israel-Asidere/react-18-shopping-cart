@@ -12,7 +12,7 @@ export default function Basket (props) {
       {/* map each item to a div and set key to get rid of warning */}
       {cartItems.map(item => (
         <div key={item.id} className='row'>
-          <div className='col-1'></div>
+          <div className='col-1'>{item.name}</div>
           <div className='col-1'>
             <button onClick={() => onRemove(item)} className='remove'>
               -
