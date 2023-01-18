@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useDeferredValue, useEffect, useState, useTransition } from 'react'
 import Basket from './components/Basket'
 import Header from './components/Header'
 import Main from './components/Main'
@@ -37,16 +37,22 @@ function App () {
       localStorage.setItem('cartItems', JSON.stringify(newCartItems))
     }
   }
+  const [isPending, startTransition] = useTransition()
+  const cartItemsCount = useDeferredValue(cartItems.length)
   useEffect(() => {
-    setCartItems(
-      localStorage.getItem('cartItems')
-        ? JSON.parse(localStorage.getItem('cartItems'))
-        : []
-    )
+    startTransition(() => {
+      setCartItems(
+        localStorage.getItem('cartItems')
+          ? JSON.parse(localStorage.getItem('cartItems'))
+          : []
+      )
+    })
   }, [])
-  return (
+  return isPending ? (
+    <div>Loading</div>
+  ) : (
     <div>
-      <Header countCartItems={cartItems.length} />
+      <Header countCartItems={cartItemsCount} />
       <div className='row'>
         <Main
           cartItems={cartItems}
